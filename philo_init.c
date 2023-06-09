@@ -54,7 +54,8 @@ int ft_init_threads(t_data *data, char **argv, int argc)
     thread = malloc(sizeof(pthread_t) * data->num_philos);
     while (i < data->num_philos)
     {
-        pthread_create(&thread[i], NULL, philo_routine, (void*)&data->all_philos[i]);
+        //printf("creo thread\n");
+        pthread_create(&thread[i], NULL, &philo_routine, (void*)&data->all_philos[i]);
         i++;
     }
     data->threads = thread; 
@@ -73,20 +74,37 @@ int ft_init_philos_data(t_data *data, char **argv, int argc)
     while(i < data->num_philos)
     {
         philos[i].philo_id = i + 1;
-        printf("Philosopher id = %d\n", philos[i].philo_id);
+        //printf("Philosopher id = %d\n", philos[i].philo_id);
         philos[i].meals_took = 0; 
         philos[i].time_to_die = data->time_to_die;
         philos[i].time_to_eat = data->time_to_eat;
         philos[i].time_to_sleep = data->time_to_sleep;
         philos[i].last_meal_time = ft_get_time();
-        printf("Last meal time filosofo %d = %ld\n", philos[i].philo_id, philos[i].last_meal_time);
+        //printf("Last meal time filosofo %d = %ld\n", philos[i].philo_id, philos[i].last_meal_time);
         philos[i].all_meals_eaten = 0; 
         philos[i].left_fork = &(data->forks[i]);
         philos[i].right_fork = &(data->forks[(i + 1) % (data->num_philos)]);
-        printf("Indice forchetta sinistra filosofo %d = %d\n", philos[i].philo_id, i);
-        printf("Indice forchetta destra filosofo %d = %d\n", philos[i].philo_id, (i + 1) % (data->num_philos));
+        philos[i].output_lock = &(data->output_lock);
+        //printf("Indice forchetta sinistra filosofo %d = %d\n", philos[i].philo_id, i);
+        //printf("Indice forchetta destra filosofo %d = %d\n", philos[i].philo_id, (i + 1) % (data->num_philos));
         i++;
     }
     data->all_philos = philos;
+    return (1);
+}
+
+
+int ft_end_threads(t_data *data, char **argv, int argc)
+{
+    int i; 
+
+    i = 0; 
+
+    while (i < data->num_philos)
+    {
+        pthread_join(data->threads[i], NULL);
+        i++;
+    }
+
     return (1);
 }

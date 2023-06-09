@@ -5,17 +5,18 @@ void    *philo_routine(void *ph)
     t_philos *philo; 
 
     philo = (t_philos*)ph;
-
+    
+    printf("Philo %d routine\n", philo->philo_id);
     while (1)
     {
         //taking forks
         take_forks(philo);
         //eat (if has got forks)
-        eating_meal(philo);
+        //eating_meal(philo);
         //sleep (when he finishes eat)
-        sleeping(philo);
+        //sleeping(philo);
         //think (when he finishes sleep)
-        thinking(philo); 
+        //thinking(philo); 
     }
     return (NULL);
 }

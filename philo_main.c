@@ -29,4 +29,5 @@ int main(int argc, char **argv)
         return (1);
     if (!ft_init_threads(&data, argv, argc))
         return (1);
+    ft_end_threads(&data, argv, argc);
 }
