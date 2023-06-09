@@ -20,3 +20,19 @@ void    *philo_routine(void *ph)
     }
     return (NULL);
 }
+
+void    *philo_monitor(void *ph)
+{
+    t_philos *philo;
+    int i;
+
+    i = 0;
+    philo = (t_philos*)ph;
+    printf("Philo monitor\n");
+
+    //in questo thread devo controllare se tutti i filosofi hanno raggiunto il numero di pasti totale
+    //(nel caso in cui aggiungo il parametro opzionale num di pasti max)
+    //oppure se uno dei filosofi e' morto
+  
+
+}

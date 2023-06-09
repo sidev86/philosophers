@@ -48,6 +48,7 @@ int ft_init_threads(t_data *data, char **argv, int argc)
     int i; 
     int j; 
     pthread_t *thread; 
+    pthread_t monitor_th;
 
     i = 0; 
     j = 0; 
@@ -58,6 +59,7 @@ int ft_init_threads(t_data *data, char **argv, int argc)
         pthread_create(&thread[i], NULL, &philo_routine, (void*)&data->all_philos[i]);
         i++;
     }
+    pthread_create(&monitor_th, NULL, &philo_monitor, (void*)data->all_philos);
     data->threads = thread; 
     return (1);
 }
@@ -85,6 +87,8 @@ int ft_init_philos_data(t_data *data, char **argv, int argc)
         philos[i].left_fork = &(data->forks[i]);
         philos[i].right_fork = &(data->forks[(i + 1) % (data->num_philos)]);
         philos[i].output_lock = &(data->output_lock);
+        philos[i].num_philos = &(data->num_philos);
+        printf("Numero filosofi = %d\n", data->num_philos);
         //printf("Indice forchetta sinistra filosofo %d = %d\n", philos[i].philo_id, i);
         //printf("Indice forchetta destra filosofo %d = %d\n", philos[i].philo_id, (i + 1) % (data->num_philos));
         i++;
