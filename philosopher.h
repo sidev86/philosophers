@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -12,15 +13,17 @@ typedef struct s_philos
 {
     int philo_id;
     int meals_took;
-    int time_to_die;
+    int time_survive;
     int time_to_eat;
     int time_to_sleep;
-    int all_meals_eaten;
+    int stop;
     int num_philos;
+    time_t initial_time;
     time_t last_meal_time;
     pthread_mutex_t *output_lock;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
+    struct s_data *data_table;
 }               t_philos;
 
 typedef struct s_data
@@ -45,8 +48,9 @@ int ft_args_valid(int ac, char **av);
 int ft_init_data(t_data *data, char **argv, int argc);
 int ft_init_mutexes(t_data *data, char **argv, int argc);
 int ft_init_threads(t_data *data, char **argv, int argc);
-int ft_end_threads(t_data *data, char **argv, int argc);
+int ft_close_threads(t_data *data, char **argv, int argc);
 int ft_init_philos_data(t_data *data, char **argv, int argc);
+int ft_max_meals_eaten(t_philos *philo);
 long int ft_get_time();
 
 
@@ -57,4 +61,5 @@ void    eating_meal(t_philos *philo);
 void    sleeping(t_philos *philo);
 void    thinking(t_philos *philo);
 void    print_error(char *str_err);
+
 

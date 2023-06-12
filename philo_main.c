@@ -11,7 +11,7 @@ long int ft_get_time()
     long int    time;
 
     gettimeofday(&tv, NULL);
-    time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    time = (size_t)tv.tv_sec * 1000 + (size_t)tv.tv_usec / 1000;
     return (time);  
 }
 
@@ -29,5 +29,5 @@ int main(int argc, char **argv)
         return (1);
     if (!ft_init_threads(&data, argv, argc))
         return (1);
-    ft_end_threads(&data, argv, argc);
+    ft_close_threads(&data, argv, argc);
 }
