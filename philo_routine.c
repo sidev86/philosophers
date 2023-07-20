@@ -1,82 +1,91 @@
-#include "philosopher.h"
-
-void    one_philo_fork(t_philos *philo)
-{
-     time_t actual_time;
-
-     actual_time = ft_get_time();
-     pthread_mutex_lock(philo->left_fork);
-     pthread_mutex_lock(philo->output_lock);
-     printf("%ld %d has taken a fork\n",(actual_time - philo->initial_time),  philo->philo_id);
-     pthread_mutex_unlock(philo->output_lock);
-}
-
+#include "philo.h"
 
 void    *philo_routine(void *ph)
 {
-    t_philos *philo; 
+    t_philo *philo; 
+    time_t current_time; 
+    int rf_index;
+    int lf_index; 
+    
 
-    philo = (t_philos*)ph;
-    philo->initial_time = ft_get_time();
-    philo->last_meal_time = ft_get_time();
-  
-    while (1)
+    philo = (t_philo*)ph; 
+    rf_index = philo->philo_index - 1;
+    lf_index = philo->philo_index % philo->table->num_philos;
+    philo->table->forks[rf_index] = 0; 
+    philo->table->forks[lf_index] = 0; 
+    
+    while(!philo->is_dead)
     {
-        if (philo->data_table->some_dead || ft_max_meals_eaten(philo) || philo->stop)
-            return(NULL);
-        take_forks(philo);
-        if (philo->data_table->some_dead || ft_max_meals_eaten(philo) || philo->stop)
-            return(NULL);
-        eating_meal(philo);
-        if (philo->data_table->some_dead || ft_max_meals_eaten(philo) || philo->stop)
-            return(NULL);
-        sleeping(philo);
-         if (philo->data_table->some_dead || ft_max_meals_eaten(philo) || philo->stop)
-            return(NULL);
-        thinking(philo); 
-    }
-    return (NULL);
-}
+        //pthread_mutex_lock(&philo->table->print_out);
+        //printf("Indici forchette %d: %d %d \n",philo->philo_index, philo->table->forks[rf_index],!philo->table->forks[lf_index]);
+        //pthread_mutex_unlock(&philo->table->print_out);
+        
+            
+            //PHILO TAKING FORKS
+            /*pthread_mutex_lock(&philo->table->print_out);
+            printf("filosofo %d prende forchets\n", philo->philo_index); 
+            printf("Indici forchette filosofo %d : %d %d \n",philo->philo_index,philo->table->forks[rf_index],philo->table->forks[lf_index]);
+            pthread_mutex_unlock(&philo->table->print_out);*/
+            pthread_mutex_lock(&philo->table->forks_mutex[rf_index]);
+            pthread_mutex_lock(&philo->table->forks_mutex[lf_index]);
+            //philo->table->forks[rf_index] = 1; 
+            //philo->table->forks[lf_index] = 1; 
+            //philo->has_forks = 1; 
+            current_time = get_current_time() - philo->table->start_time; 
+            //printf("Indice forchetta destra = %d\n", rf_index); 
+            //printf("Indice forchetta sinistra = %d\n", lf_index); 
+            pthread_mutex_lock(&philo->table->print_out);
+            printf("%ld ms %d has taken a fork\n", current_time, philo->philo_index); 
+            printf("%ld ms %d has taken a fork\n", current_time, philo->philo_index); 
+            pthread_mutex_unlock(&philo->table->print_out);
+          
+    
+            //PHILO IS EATING
+            //printf("filosofo %d mangiare\n", philo->philo_index); 
+            philo->last_meal = get_current_time();
+            current_time = get_current_time() - philo->table->start_time; 
+            pthread_mutex_lock(&philo->table->print_out);
+            printf("%ld ms %d is eating\n", current_time, philo->philo_index);
+            pthread_mutex_unlock(&philo->table->print_out);
+            
+            usleep(philo->table->time_to_eat * 1000);
+            philo->last_meal = get_current_time();
+            pthread_mutex_unlock(&philo->table->forks_mutex[rf_index]);
+            pthread_mutex_unlock(&philo->table->forks_mutex[lf_index]);
 
-void    stop_all_philos(t_philos *philos)
-{
-    int i; 
+            //philo->table->forks[rf_index] = 0; 
+            //philo->table->forks[lf_index] = 0; 
+            
+            //printf("philo last meal after eats : %ld\n", philo->last_meal);
+             
+            //PHILO IS SLEEPING
+           
+            current_time = get_current_time() - philo->table->start_time; 
+            pthread_mutex_lock(&philo->table->print_out);
+            printf("%ld ms %d is sleeping\n", current_time, philo->philo_index); 
+            pthread_mutex_unlock(&philo->table->print_out);
+            usleep(philo->table->time_to_sleep * 1000);
 
-    i = -1; 
-
-    while (++i < philos[0].num_philos)
-        philos[i].stop = 1; 
-}
-
-void    *philo_monitor(void *ph)
-{
-    t_philos *philo;
-    time_t actual_time;
-    int i;
-
-    i = 0;
-    philo = (t_philos*)ph;
-    while(!philo[i].stop)
-    {
-        i = 0; 
-        while (i < philo->num_philos)
-        {
-            //printf("olalaaaa\n");
-            actual_time = ft_get_time();
-            if(actual_time - philo[i].last_meal_time > philo[i].time_survive)
-            {
-                philo[i].data_table->some_dead = 1;
-                pthread_mutex_lock(philo[i].output_lock); 
-                //printf("some deady = %d\n", philo[i].data_table->some_dead);
-                printf("%ld %d died\n",(actual_time - philo[i].initial_time),  philo[i].philo_id);
-                pthread_mutex_unlock(philo[i].output_lock); 
-                stop_all_philos(philo->data_table->all_philos);
-                return(NULL);
-            }
-            i++;
-        }
+            //PHILO IS THINKING
+            current_time = get_current_time() - philo->table->start_time; 
+             pthread_mutex_lock(&philo->table->print_out);
+            printf("%ld ms %d is thinking\n", current_time, philo->philo_index); 
+            pthread_mutex_unlock(&philo->table->print_out);
     }
   
-    return (NULL);
+    
+     //pthread_mutex_lock(&philo->tables->taking_forks);
+    /*if (philo->tables->forks[0] == 0)
+    {
+        printf("entro if\n");
+       
+        //philo->forks[rf_index] = 1; 
+        //philo->forks[lf_index] = 1; 
+        //printf("Philosopher %d taking forks\n", philo->philo_index);
+        usleep(1000 * 1000);
+    }*/
+     //pthread_mutex_unlock(&philo->tables->taking_forks);
 
+
+    return (NULL);
 }
