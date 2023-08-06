@@ -4,11 +4,10 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-
 typedef struct s_table
 {
     int num_philos;
-    int num_meals;
+    int num_of_meals;
     int time_to_die;
     int time_to_eat;
     int time_to_sleep; 
@@ -27,14 +26,13 @@ typedef struct s_philo
     int is_dead;
     int meals_eaten; 
     int eat_all_meals; 
+    int is_eating;
     time_t last_meal;
     
     struct s_table *table;
 }               t_philo;
 
-
-
-
 void    *philo_routine(void *ph);
+void    *one_philo_routine(void *ph); 
 void    *philo_monitor(void *ph);
 long    get_current_time();

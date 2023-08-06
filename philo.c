@@ -55,9 +55,9 @@ void    init_data(t_philo **philo, t_table **table, char **argv, int argc)
     (*table)->time_to_sleep = atoi(argv[4]);
     
     if (argc == 6)
-        (*table)->num_meals = atoi(argv[5]);
+        (*table)->num_of_meals = atoi(argv[5]);
     else 
-        (*table)->num_meals = -1; 
+        (*table)->num_of_meals = -1; 
     
     (*table)->start_time = get_current_time();
     printf("Actual time in ms : %ld\n", (*table)->start_time);
@@ -67,7 +67,7 @@ void    init_data(t_philo **philo, t_table **table, char **argv, int argc)
     printf("Time to die = %d\n", (*table)->time_to_die);
     printf("Time to eat = %d\n", (*table)->time_to_eat);
     printf("Time to sleep = %d\n", (*table)->time_to_sleep);
-    printf("Number of meals = %d\n", (*table)->num_meals);
+    printf("Number of meals = %d\n", (*table)->num_of_meals);
 
     *philo = malloc(sizeof(t_philo) * (*table)->num_philos);
     if (*philo == NULL) 
@@ -83,7 +83,8 @@ void    init_data(t_philo **philo, t_table **table, char **argv, int argc)
         (*philo)[i].table = (*table);
         (*philo)[i].table->someone_died = 0; 
         (*philo)[i].last_meal = 0; 
-         printf("Someone died:::%d\n\n", (*philo)[i].table->someone_died);
+        (*philo)[i].is_eating = 0; 
+        //printf("Someone died:::%d\n\n", (*philo)[i].table->someone_died);
         i++;
     }
     (*philo)->table->forks = malloc(sizeof(int) * (*table)->num_philos);
@@ -101,6 +102,7 @@ void    init_data(t_philo **philo, t_table **table, char **argv, int argc)
 
 void    init_mutex(t_philo **philo, t_table **table)
 {
+    printf("Inizializzo mutex\n");
     pthread_mutex_init(&(*table)->print_out, NULL); 
 }
 void start_threads(t_philo **philo, t_table **table)
@@ -111,13 +113,22 @@ void start_threads(t_philo **philo, t_table **table)
     i = 0; 
     thread = malloc(sizeof(pthread_t) * (*table)->num_philos);
     //(*table)->monitor_thread = malloc(sizeof(pthread_t)); 
-    while (i < (*table)->num_philos)
+    if ((*table)->num_philos == 1)
+        pthread_create(&thread[i], NULL, &one_philo_routine, &(*philo)[i]);
+
+    else
     {
-        pthread_create(&thread[i], NULL, &philo_routine, &(*philo)[i]);
-        i++;
+        while (i < (*table)->num_philos)
+        {
+            //printf("Creo Threadd\n");
+            pthread_create(&thread[i], NULL, &philo_routine, &(*philo)[i]);
+            i++;
+        }
     }
+   
     i = 0;
-    usleep(10 * 1000);
+    //usleep(10 * 1000);
+    //printf("Creo Monitor Thread\n");
     pthread_create(&(*table)->monitor_thread, NULL, &philo_monitor, *philo); 
     (*table)->threads = thread; 
 }
