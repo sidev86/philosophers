@@ -7,7 +7,6 @@ SRC =	main.c\
 		init.c\
 		threads.c\
  		errors.c\
-		free_data.c\
 		routine.c\
 		monitor.c\
 		utils.c
