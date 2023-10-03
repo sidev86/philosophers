@@ -13,16 +13,18 @@ void print_state(t_philo *philo, char *state)
 {
     long int actual_time = get_current_time() - philo->table->start_time;
     pthread_mutex_lock(&philo->table->print_out);
-    if (!strcmp(state, "takefork"))
+    if (!ft_strncmp(state, "takefork", 8))
         printf("%ldms %d is taking a fork\n", actual_time, philo->philo_number);
-    else if (!strcmp(state, "eat"))
+    else if (!ft_strncmp(state, "eat", 3))
         printf("%ldms %d is eating\n", actual_time, philo->philo_number);
-    else if (!strcmp(state, "sleep"))
+    else if (!ft_strncmp(state, "sleep", 5))
         printf("%ldms %d is sleeping\n", actual_time, philo->philo_number);
-    else if (!strcmp(state, "thinking"))
+    else if (!ft_strncmp(state, "thinking", 8))
         printf("%ldms %d is thinking\n", actual_time, philo->philo_number);
-    else if (!strcmp(state, "die"))
+    else if (!ft_strncmp(state, "die", 3))
         printf("%ldms %d died\n", actual_time, philo->philo_number);
+    else if (!ft_strncmp(state, "alleat", 7))
+        printf("all philos ate %d times. stop\n", philo->table->num_of_meals);
     pthread_mutex_unlock(&philo->table->print_out);
 }
 
@@ -30,30 +32,29 @@ void print_state(t_philo *philo, char *state)
 void routine_thread(void *ph)
 {
     t_philo *philo = (t_philo*)ph;
+
     philo->fork_right = &philo->table->forks[philo->philo_number - 1];
     philo->fork_left = &philo->table->forks[philo->philo_number % philo->table->num_philos];
-    philo->last_meal = get_current_time();
-    //printf("philo number %d\n", philo->philo_number);
     if (philo->philo_number % 2 == 0)
-        usleep(15000);
-   
-    while (!philo->table->some_die)
+        ft_msleep(15);
+    while (!philo->table->some_die && !philo->eat_all_meals)
     {
         pthread_mutex_lock(philo->fork_left);
         print_state(philo, "takefork");
         pthread_mutex_lock(philo->fork_right);
         print_state(philo, "takefork");
-        //philo->is_eating = 1;
         print_state(philo, "eat");
         philo->last_meal = get_current_time();
         ft_msleep(philo->table->time_to_eat);
         pthread_mutex_unlock(philo->fork_left);
         pthread_mutex_unlock(philo->fork_right);
         philo->meals_eaten++;
-        printf("Philosopher %d has eaten %d meals\n", philo->philo_number, philo->meals_eaten);
+        if (philo->meals_eaten == philo->table->num_of_meals)
+            philo->eat_all_meals = 1;
+        if (philo->eat_all_meals)
+            break;
         print_state(philo, "sleep");
         ft_msleep(philo->table->time_to_sleep);
-        printf("time passed since last meal = %ld\n", get_current_time() - philo->last_meal);
         print_state(philo, "thinking");
     }
 }

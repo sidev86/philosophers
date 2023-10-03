@@ -5,15 +5,16 @@ void init_table(int argc, char **argv, t_table **table)
 {
     *table = malloc(sizeof(t_table));
         
-    (*table)->num_philos = atoi(argv[1]);
-    (*table)->time_to_die = atoi(argv[2]);
-    (*table)->time_to_eat = atoi(argv[3]);
-    (*table)->time_to_sleep = atoi(argv[4]);
+    (*table)->num_philos = ft_atoi(argv[1]);
+    (*table)->time_to_die = ft_atoi(argv[2]);
+    (*table)->time_to_eat = ft_atoi(argv[3]);
+    (*table)->time_to_sleep = ft_atoi(argv[4]);
     (*table)->num_of_meals = -1;
     (*table)->some_die = 0;
-    (*table)->eat_all = 0;
+    (*table)->all_philos_eat = 0;
+    (*table)->start_time = get_current_time(); 
     if (argc == 6)
-        (*table)->num_of_meals = atoi(argv[5]);
+        (*table)->num_of_meals = ft_atoi(argv[5]);
     (*table)->forks = malloc(sizeof(pthread_mutex_t) * (*table)->num_philos);
 }
 

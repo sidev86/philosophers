@@ -9,7 +9,8 @@ SRC =	main.c\
  		errors.c\
 		free_data.c\
 		routine.c\
-		monitor.c
+		monitor.c\
+		utils.c
 
 CC = gcc
 

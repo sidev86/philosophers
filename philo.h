@@ -8,7 +8,7 @@
 
 //ERRORS MSGS
 #define ERR_NUM_ARGS "Number of arguments invalid. Must be between 5 and 6."
-#define ERR_INVALID_ARGS "One or more arguments are not valid. All arguments must be positive numbers"
+#define ERR_INVALID_ARGS "One or more arguments are not valid. All arguments must be decimal positive numbers"
 #define ERR_NUM_PHILOS_ARG "Number of philosophers cannot be more than 250"
 
 
@@ -21,7 +21,7 @@ typedef struct s_table
     int time_to_eat;
     int time_to_sleep;
     int some_die;
-    int eat_all;
+    int all_philos_eat;
     long int start_time; 
     pthread_t monitor_thread; 
     pthread_mutex_t print_out; 
@@ -55,3 +55,6 @@ void routine_thread(void *ph);
 void monitor_thread(void *ph);
 long int get_current_time();
 void print_state(t_philo *philo, char *state);
+int	ft_atoi(const char *str);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+void free_data(t_table *table, t_philo *philo);
