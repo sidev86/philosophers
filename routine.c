@@ -15,19 +15,19 @@ void	print_state(t_philo *philo, char *state)
 
 	actual_time = get_current_time() - philo->table->start_time;
 	pthread_mutex_lock(&philo->table->print_out);
-	if (!ft_strncmp(state, "takefork", 8))
+	if (!philo->table->some_die)
+	{
+		if (!ft_strncmp(state, "takefork", 8))
 		printf("%ldms %d is taking a fork\n", actual_time, philo->philo_number);
-	else if (!ft_strncmp(state, "eat", 3))
-		printf("%ldms %d is eating\n", actual_time, philo->philo_number);
-	else if (!ft_strncmp(state, "sleep", 5))
-		printf("%ldms %d is sleeping\n", actual_time, philo->philo_number);
-	else if (!ft_strncmp(state, "thinking", 8))
-		printf("%ldms %d is thinking\n", actual_time, philo->philo_number);
-	else if (!ft_strncmp(state, "die", 3))
-		printf("%ldms %d died\n", actual_time, philo->philo_number);
-	else if (!ft_strncmp(state, "alleat", 7))
-		printf("all philos ate %d times. stop\n", philo->table->num_of_meals);
+		else if (!ft_strncmp(state, "eat", 3))
+			printf("%ldms %d is eating\n", actual_time, philo->philo_number);
+		else if (!ft_strncmp(state, "sleep", 5))
+			printf("%ldms %d is sleeping\n", actual_time, philo->philo_number);
+		else if (!ft_strncmp(state, "thinking", 8))
+			printf("%ldms %d is thinking\n", actual_time, philo->philo_number);
+	}
 	pthread_mutex_unlock(&philo->table->print_out);
+	
 }
 
 void	routine_thread(void *ph)
@@ -40,14 +40,18 @@ void	routine_thread(void *ph)
 	[philo->philo_number % philo->table->num_philos];
 	if (philo->philo_number % 2 == 0)
 		usleep(15000);
+	pthread_mutex_lock(&philo->table->print_out);
 	while (!philo->table->some_die && !philo->eat_all_meals)
 	{
+		pthread_mutex_unlock(&philo->table->print_out);
 		pthread_mutex_lock(philo->fork_left);
 		print_state(philo, "takefork");
 		pthread_mutex_lock(philo->fork_right);
 		print_state(philo, "takefork");
 		print_state(philo, "eat");
+		pthread_mutex_lock(&philo->table->last_meal_lock);
 		philo->last_meal = get_current_time();
+		pthread_mutex_unlock(&philo->table->last_meal_lock);
 		//printf("last meal time : %ld\n", philo->last_meal);
 		//printf("start time : %ld\n", philo->table->start_time);
 		ft_msleep(philo->table->time_to_eat);
@@ -61,5 +65,7 @@ void	routine_thread(void *ph)
 		print_state(philo, "sleep");
 		ft_msleep(philo->table->time_to_sleep);
 		print_state(philo, "thinking");
+		pthread_mutex_lock(&philo->table->print_out);
 	}
+	pthread_mutex_unlock(&philo->table->print_out);
 }

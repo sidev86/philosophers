@@ -23,6 +23,7 @@ typedef struct s_table
 	int				all_philos_eat;
 	long			start_time;
 	pthread_t		monitor_thread;
+	pthread_mutex_t last_meal_lock; 
 	pthread_mutex_t	print_out;
 	pthread_mutex_t	*forks;
 }		t_table;

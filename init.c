@@ -47,5 +47,7 @@ int	init_mutexes(t_table **table)
 	}
 	if (pthread_mutex_init(&(*table)->print_out, NULL) == 1)
 		return (1);
+	if (pthread_mutex_init(&(*table)->last_meal_lock, NULL) == 1)
+		return (1);
 	return (0);
 }

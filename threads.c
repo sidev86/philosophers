@@ -36,12 +36,13 @@ void	finish_threads(t_philo **philo, t_table **table)
 	while (i < (*table)->num_philos)
 	{
 		pthread_join((*philo)[i].ph_thread, NULL);
+		pthread_mutex_destroy(&((*table)->forks[i]));
 		i++;
 	}
 	pthread_mutex_destroy(&((*table)->print_out));
-	i = -1; 
-	while (++i < (*table)->num_philos)
-		pthread_mutex_destroy(&((*table)->forks[i]));
-	free(*philo);
+	pthread_mutex_destroy(&((*table)->last_meal_lock));
+	//free(*philo);
+	//free((*philo)->table->forks);
+	//free(*philo);
 	//exit(1);
 }
