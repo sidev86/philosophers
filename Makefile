@@ -9,11 +9,12 @@ SRC =	main.c\
  		errors.c\
 		routine.c\
 		monitor.c\
+		forks.c\
 		utils.c
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror -pthread
+FLAGS = -g -Wall -Wextra -Werror -pthread
 
 OBJS = $(SRC:.c=.o)
 

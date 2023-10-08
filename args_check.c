@@ -51,7 +51,7 @@ int	check_args(int argc, char **argv)
 		print_error(ERR_INVALID_ARGS);
 		return (1);
 	}
-	if (ft_atoi(argv[1]) > 250)
+	if (ft_atoi(argv[1]) > 200)
 	{
 		print_error(ERR_NUM_PHILOS_ARG);
 		return (1);

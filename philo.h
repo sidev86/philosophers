@@ -3,7 +3,9 @@
 
 # define ERR_NUM_ARGS "Number of arguments invalid. Must be between 5 and 6."
 # define ERR_INVALID_ARGS "One or more arguments are not valid."
-# define ERR_NUM_PHILOS_ARG "Number of philosophers cannot be more than 250"
+# define ERR_NUM_PHILOS_ARG "Number of philosophers cannot be more than 200"
+# define ERR_MUTEX_INIT "Mutex initialization error"
+# define ERR_ON_MALLOC "Memory Allocation Error on Heap with malloc"
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -23,9 +25,11 @@ typedef struct s_table
 	int				all_philos_eat;
 	long			start_time;
 	pthread_t		monitor_thread;
-	pthread_mutex_t last_meal_lock; 
+	pthread_mutex_t	meals_lock;
+	pthread_mutex_t	last_meal_lock;
+	pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_out;
-	pthread_mutex_t	*forks;
+	pthread_mutex_t	forks[250];
 }		t_table;
 
 typedef struct s_philo
@@ -42,16 +46,19 @@ typedef struct s_philo
 }		t_philo;
 
 int			check_args(int argc, char **argv);
+int			init_table(int argc, char **argv, t_table **table);
+int			init_philos(t_philo **philo, t_table **table);
 int			init_mutexes(t_table **table);
 int			ft_atoi(const char *str);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
+void		take_forks(t_philo *philo);
+void		drop_forks(t_philo *philo);
 void		print_error(char *msg);
 void		start_threads(t_philo **philo, t_table **table);
 void		finish_threads(t_philo **philo, t_table **table);
-void		init_table(int argc, char **argv, t_table **table);
-void		init_philos(t_philo **philo, t_table **table);
 void		routine_thread(void *ph);
 void		monitor_thread(void *ph);
+void		onephilo_thread(void *ph);
 void		print_state(t_philo *philo, char *state);
 void		free_data(t_table *table, t_philo *philo);
 long		get_current_time(void);
