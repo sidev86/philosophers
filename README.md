@@ -31,14 +31,14 @@ timestamp_in_ms X died</code></pre>
 </ul>
 
 <h2>Compilation</h2>
-Type <code>make</code> to compile and generate the <code>philo</code> executable file
+Type <strong><code>make</code></strong> to compile and generate the <strong><code>philo</code></strong> executable file
 
 <h2>Usage</h2>
 <p>To run the simulation, execute the program with the required arguments:</p>
-<pre><code>./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]</code></pre>
+<pre><code><strong>./philo</strong> number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]</code></pre>
 
 <p>For example:</p>
-<pre><code>./philo 5 800 200 200 3</code></pre>
+<pre><code><strong>./philo</strong> 5 800 200 200 3</code></pre>
 
 <p>This command would simulate 5 philosophers who have 800 ms to eat before starving, take 200 ms to eat, and sleep for 200 ms, with a requirement of eating 3 times.</p>
 <p><strong>Important note:</strong> The parameter <code>[number_of_times_each_philosopher_must_eat]</code> is optional. 
