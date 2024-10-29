@@ -14,17 +14,21 @@ The simulation tracks the state of each philosopher, which can be:
   <li>Sleeping</li>
   <li>Thinking</li>
   <li>Dying (if they do not have a meal in the given time period)</li>
-  <li>Taking a fork</li>
 </ul>
 
 <h3>Logging</h3>
 <p>The program will log state changes in the following format:</p>
 <pre>
   <code>
-    timestamp_in_ms <span style="color:blue;">X</span> has taken a fork
-    timestamp_in_ms <span style="color:blue;">X</span> <span style="color:red;">is</span> eating
-    timestamp_in_ms <span style="color:blue;">X</span> <span style="color:red;">is</span> sleeping
-    timestamp_in_ms <span style="color:blue;">X</span> <span style="color:red;">is</span> thinking
-    timestamp_in_ms <span style="color:blue;">X</span> died
+    timestamp_in_ms X has taken a fork
+    timestamp_in_ms X is eating
+    timestamp_in_ms X is sleeping
+    timestamp_in_ms X is thinking
+    timestamp_in_ms X died
   </code>
 </pre>
+
+<ul>
+  <li><code>timestamp_in_ms</code> should reflect the current timestamp in milliseconds.</li>
+  <li>Each log entry should be distinct, and death messages should be displayed no more than 10 ms after the event.</li>
+</ul>
