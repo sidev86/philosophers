@@ -18,15 +18,11 @@ The simulation tracks the state of each philosopher, which can be:
 
 <h3>Logging</h3>
 <p>The program will log state changes in the following format:</p>
-<pre>
-  <code>
-    timestamp_in_ms X has taken a fork
+<pre><code>timestamp_in_ms X has taken a fork
     timestamp_in_ms X is eating
     timestamp_in_ms X is sleeping
     timestamp_in_ms X is thinking
-    timestamp_in_ms X died
-  </code>
-</pre>
+    timestamp_in_ms X died</code></pre>
 
 <ul>
   <li><code>timestamp_in_ms</code> should reflect the current timestamp in milliseconds.</li>
@@ -45,9 +41,5 @@ Type <code>make</code> to compile and generate the <code>philo</code> executable
   </code>
 </pre>
 <p>For example:</p>
-<pre>
-  <code>
-    ./philo 5 800 200 200 3
-  </code>
-</pre>
+<pre><code>./philo 5 800 200 200 3</code></pre>
 This command would simulate 5 philosophers who have 800 ms to eat before starving, take 200 ms to eat, and sleep for 200 ms, with a requirement of eating 3 times.
