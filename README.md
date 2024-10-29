@@ -30,5 +30,6 @@ The simulation tracks the state of each philosopher, which can be:
 
 <ul>
   <li><code>timestamp_in_ms</code> should reflect the current timestamp in milliseconds.</li>
+  <li>X represents the philosopher number, which ranges from 1 to the total number of philosophers.</li>
   <li>Each log entry should be distinct, and death messages should be displayed no more than 10 ms after the event.</li>
 </ul>
